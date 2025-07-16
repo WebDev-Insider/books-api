@@ -1,24 +1,30 @@
-const books = [
-    { id: '1', title: 'Book One', author: 'Author A' },
-    { id: '2', title: 'Book Two', author: 'Author B' }
-];
+import { Book } from './book.model.js';
 
-export const getAllBooks = () => books;
-
-export const getBookById = (id) => books.find(book => book.id === id);
-
-export const createBook = (data) => {
-    const newBook = { id: String(books.length + 1), ...data };
-    books.push(newBook);
-    return newBook;
+export const getAllBooks = async () => {
+  return await Book.findAll();
 };
 
-export const updateBook = (id, data) => {
-    // Logic error: does not update the book
-    return books.find(book => book.id === id);
+export const getBookById = async (id) => {
+  return await Book.findByPk(id);
 };
 
-export const deleteBook = (id) => {
-    // Logic error: does not remove the book
-    return true;
-}; 
+export const createBook = async (data) => {
+  return await Book.create(data);
+};
+
+export const updateBook = async (id, data) => {
+  const book = await Book.findByPk(id);
+  if (!book) {
+    return null;
+  }
+  return await book.update(data);
+};
+
+export const deleteBook = async (id) => {
+  const book = await Book.findByPk(id);
+  if (!book) {
+    return false;
+  }
+  await book.destroy();
+  return true;
+};
